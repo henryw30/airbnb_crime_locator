@@ -4,7 +4,6 @@ from nltk.parse import CoreNLPParser
 from sodapy import Socrata
 import datetime
 import neighborhoods as nb
-import sys
 import argparse
 
 #reads url listings from listings.txt
