@@ -1,3 +1,4 @@
+#constant neighborhood information
 manhattan_neighborhoods = {"midtown", "harlem", "chelsea", "noho", "soho", "nolita", "tribeca", "greenwich"}
 queens_neighborhoods = {"astoria", "sunnyside", "flushing", "bellerose", "pomonok", "corona", "glendale", "bellaire", "hollis", "roxbury", "rockaway"}
 bronx_neighborhoods = {"belmont", "fordham", "woodlawn", "longwood", "tremont", "melrose", "allerton", "eastchester", "schuylerville"}
