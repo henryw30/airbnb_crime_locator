@@ -4,6 +4,8 @@ from nltk.parse import CoreNLPParser
 from sodapy import Socrata
 import datetime
 import neighborhoods as nb
+import sys
+import argparse
 
 #reads url listings from listings.txt
 def read_url_listings(path_to_listings):
@@ -13,6 +15,7 @@ def read_url_listings(path_to_listings):
     text_file.close()
     return urls
 
+#writes ordered list to file
 def write_listings_ordered(ordered_listings):
     with open('ordered.txt', 'w') as f:
         f.write('\n'.join('%s    %s' % x for x in ordered_listings))
@@ -62,20 +65,36 @@ def get_crime_data(name_of_borough):
     return num_crimes
 
 
+#SCRIPT_START
+#----------------------------------------------------------------------------------------------------#
+parser = argparse.ArgumentParser(description='Get info about local server, chrome driver, headless option')
+parser.add_argument('-L', '--local_server_link', required=True, metavar="", help='NLP local server address')
+parser.add_argument('-C', '--chrome_driver_path', required=True, metavar="", help="absolute path to chrome driver")
+parser.add_argument('-H', '--headless', type=int, metavar="", help="chrome to pop on screen")
+args = parser.parse_args()
+
+
+local_server_link = args.local_server_link #http://localhost:9000
+chrome_driver_path = args.chrome_driver_path #/Users/henrywu/Downloads/chromedriver
+headless_flag = args.headless
+
+
 #connect to local NLP server
-ner_tagger = CoreNLPParser(url='http://localhost:9000', tagtype='ner')
+ner_tagger = CoreNLPParser(url=local_server_link, tagtype='ner')
 
 
 #opens chrome and goes to airbnb link and expands all elements
 options = webdriver.ChromeOptions()
-#options.add_argument('headless')
-driver = webdriver.Chrome("/Users/henrywu/Downloads/chromedriver", options=options)
+if(headless_flag == None):
+    options.add_argument('headless')
+driver = webdriver.Chrome(chrome_driver_path, options=options)
 
 urls = read_url_listings("listings.txt")
 #dictionary to keep track of listing and crime
 links_to_crime = {key: 0 for key in urls}
 
 for url in urls:
+    print("Getting webpage...")
     #open webpage
     driver.get(url)
     
@@ -96,6 +115,7 @@ for url in urls:
     for paragraph in button2.find_elements_by_class_name('_6z3til'):
         all_text = all_text + " " + paragraph.text
 
+    print("Tagging text...")
     #get all locations/cities from text on website
     the_list = [x[0] for x in ner_tagger.tag(all_text.split()) if x[1] == 'LOCATION' or x[1] == 'CITY']
     print('\n\n\n')
