@@ -36,6 +36,7 @@ Follow these directions to set up the Stanford NER Server in a terminal window:
 [main] INFO CoreNLP - StanfordCoreNLPServer listening at /0:0:0:0:0:0:0:0:9000
 ```
 - open a new terminal to run the main script, html_scrape.py
+- close the server with ctrl+c in the terminal with server info
 
 # Running the Script
 -add your airbnb listings in listings.txt separated by a comma (an example is found in listings.txt)
