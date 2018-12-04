@@ -1,5 +1,5 @@
 # airbnb_crime_locator
-Given NYC airbnb listings, finds recent crimes that have occurred in the area 
+Given a list of NYC airbnb listings, this script finds recent crimes that have occurred in the area 
 
 
 # Installation
