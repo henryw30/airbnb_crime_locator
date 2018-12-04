@@ -3,39 +3,33 @@ from selenium.webdriver.common.keys import Keys
 from nltk.parse import CoreNLPParser
 from sodapy import Socrata
 import datetime
+import neighborhoods as nb
 
-
-#read file with airbnb listings to compare
-text_file = open("listings.txt", "r")
-urls = [x.strip(' ') for x in text_file.read().split(',')]
-print(urls)
-text_file.close()
-
-
-manhattan_neighborhoods = {"midtown", "harlem", "chelsea", "noho", "soho", "nolita", "tribeca", "greenwich"}
-queens_neighborhoods = {"astoria", "sunnyside", "flushing", "bellerose", "pomonok", "corona", "glendale", "bellaire", "hollis", "roxbury", "rockaway"}
-bronx_neighborhoods = {"belmont", "fordham", "woodlawn", "longwood", "tremont", "melrose", "allerton", "eastchester", "schuylerville"}
-brooklyn_neighborhoods = {"bedford", "Bedford-Stuyvesant", "flatbush", "kensington", "coney", "bushwick", "greenpoint", "williamsburg"}
-staten_island_neighborhoods = {"arlington", "bloomfield", "concord", "livingston", "richmondtown", "stapleton", "willowbrook", "westerleigh"}
+def read_url_listings(path_to_listings):
+    #read file with airbnb listings to compare
+    text_file = open(path_to_listings, "r")
+    urls = [x.strip(' ') for x in text_file.read().split(',')]
+    text_file.close()
+    return urls
 
 def find_borough(list_of_locations):
     borough_dict = {"manhattan": 0, "queens":0, "bronx":0, "brooklyn":0, "staten":0}
 
     #go through all locations and add to count
     for loc in list_of_locations:
-        if(loc.lower() in manhattan_neighborhoods or loc.lower() == "manhattan"):
+        if(loc.lower() in nb.manhattan_neighborhoods or loc.lower() == "manhattan"):
             #since manhattan is very common in any airbnb listing near nyc
             if(loc.lower() == "manhattan"):
                 borough_dict["manhattan"] += .5
             else:
                 borough_dict["manhattan"] += 1
-        if(loc.lower() in queens_neighborhoods or loc.lower() == "queens"):
+        if(loc.lower() in nb.queens_neighborhoods or loc.lower() == "queens"):
             borough_dict["queens"] += 1
-        if(loc.lower() in bronx_neighborhoods or loc.lower() == "bronx"):
+        if(loc.lower() in nb.bronx_neighborhoods or loc.lower() == "bronx"):
             borough_dict["bronx"] += 1
-        if(loc.lower() in brooklyn_neighborhoods or loc.lower() == "brooklyn"):
+        if(loc.lower() in nb.brooklyn_neighborhoods or loc.lower() == "brooklyn"):
             borough_dict["brooklyn"] += 1
-        if(loc.lower() in staten_island_neighborhoods or loc.lower() == "staten"):
+        if(loc.lower() in nb.staten_island_neighborhoods or loc.lower() == "staten"):
             borough_dict["staten"] += 1
 
     #return the borough that is most referenced
@@ -74,6 +68,7 @@ options = webdriver.ChromeOptions()
 #options.add_argument('headless')
 driver = webdriver.Chrome("/Users/henrywu/Downloads/chromedriver", options=options)
 
+urls = read_url_listings("listings.txt")
 #dictionary to keep track of listing and crime
 links_to_crime = {key: 0 for key in urls}
 
@@ -110,7 +105,7 @@ for url in urls:
     print(borough)
 
     crime_in_neighborhood = get_crime_data(borough)
-    
+
     links_to_crime[url] = crime_in_neighborhood
 
 print(sorted(links_to_crime.items(), key=lambda x: x[1]))
