@@ -118,11 +118,15 @@ for url in urls:
     print("Tagging text...")
     #get all locations/cities from text on website
     the_list = [x[0] for x in ner_tagger.tag(all_text.split()) if x[1] == 'LOCATION' or x[1] == 'CITY']
+
+    #find the borough
     borough = find_borough(the_list)
     print("\n%s is in %s" % (url, borough.upper()))
 
+    #get crime data for borough
     links_to_crime[url] = get_crime_data(borough)
 
+#sort the listings by crimes that have occurred 
 ordered_listings = sorted(links_to_crime.items(), key=lambda x: x[1])
 print("\n\nFINAL ORDER IS (also found in ordered.txt): ", ordered_listings)
 write_listings_ordered(ordered_listings)
