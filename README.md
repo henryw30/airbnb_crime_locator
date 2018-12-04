@@ -44,7 +44,7 @@ Follow these directions to set up the Stanford NER Server in a terminal window:
 #example of absolute-path-to-chrome-driver: /Users/bob/Downloads/chromedriver
 python html_scrape.py -C <absolute-path-to-chrome-driver> -L http://localhost:9000
 ```
-- once done, results can be found in ordered.txt
+- once done, results can be found in ordered.txt found in this directory
 ## Options When Running the Script
 -use -h flag for help:
 ```
