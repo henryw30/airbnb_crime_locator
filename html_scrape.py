@@ -5,6 +5,7 @@ from sodapy import Socrata
 import datetime
 import neighborhoods as nb
 
+#reads url listings from listings.txt
 def read_url_listings(path_to_listings):
     #read file with airbnb listings to compare
     text_file = open(path_to_listings, "r")
@@ -12,6 +13,11 @@ def read_url_listings(path_to_listings):
     text_file.close()
     return urls
 
+def write_listings_ordered(ordered_listings):
+    with open('ordered.txt', 'w') as f:
+        f.write('\n'.join('%s    %s' % x for x in ordered_listings))
+
+#find specific borough given a list of cities/locations
 def find_borough(list_of_locations):
     borough_dict = {"manhattan": 0, "queens":0, "bronx":0, "brooklyn":0, "staten":0}
 
@@ -35,6 +41,7 @@ def find_borough(list_of_locations):
     #return the borough that is most referenced
     return max(borough_dict, key=borough_dict.get)
 
+#connect to NYC Crime Database and find crime listings in given name of borough
 def get_crime_data(name_of_borough):
     #connect to NYC Crime Database
     client = Socrata("data.cityofnewyork.us", None)
@@ -55,10 +62,6 @@ def get_crime_data(name_of_borough):
     return num_crimes
 
 
-
-#url = 'https://www.airbnb.com/rooms/14389040?location=New%20York%2C%20NY%2C%20United%20States&s=8y-928Tu'
-#url2 = 'https://www.airbnb.com/rooms/891117?adults=0&children=0&infants=0&toddlers=0&s=aEURFR7F'
-
 #connect to local NLP server
 ner_tagger = CoreNLPParser(url='http://localhost:9000', tagtype='ner')
 
@@ -73,6 +76,7 @@ urls = read_url_listings("listings.txt")
 links_to_crime = {key: 0 for key in urls}
 
 for url in urls:
+    #open webpage
     driver.get(url)
     
     #get extra description details
@@ -84,19 +88,15 @@ for url in urls:
     driver.execute_script("arguments[0].click();", button2.find_elements_by_class_name('_ni9axhe')[1])
     
     all_text = ""
-    #print description details
+    #add description details
     for paragraph in button.find_elements_by_class_name('_6z3til'):
         all_text = all_text + " " + paragraph.text
-        #print(paragraph.text)
-    
 
-    #print neighborhood info
+    #add neighborhood info
     for paragraph in button2.find_elements_by_class_name('_6z3til'):
         all_text = all_text + " " + paragraph.text
-        #print(paragraph.text)
 
-
-    #the_list = [x for x in ner_tagger.tag(all_text.split())]
+    #get all locations/cities from text on website
     the_list = [x[0] for x in ner_tagger.tag(all_text.split()) if x[1] == 'LOCATION' or x[1] == 'CITY']
     print('\n\n\n')
     print(the_list)
@@ -104,11 +104,10 @@ for url in urls:
     borough = find_borough(the_list)
     print(borough)
 
-    crime_in_neighborhood = get_crime_data(borough)
+    links_to_crime[url] = get_crime_data(borough)
 
-    links_to_crime[url] = crime_in_neighborhood
+write_listings_ordered(sorted(links_to_crime.items(), key=lambda x: x[1]))
 
-print(sorted(links_to_crime.items(), key=lambda x: x[1]))
 driver.quit()
 
 
