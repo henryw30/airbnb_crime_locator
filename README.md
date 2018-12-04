@@ -1,9 +1,9 @@
 # airbnb_crime_locator
-Given NYC airbnb listings, finds recent crimes that have occurred in the area
+Given NYC airbnb listings, finds recent crimes that have occurred in the area 
 
 
 # Installation
-make sure to download these repositories first:
+Make sure to download these repositories first:
 
 Stanford CoreNLP (unzip and know the absolute path to this directory): https://stanfordnlp.github.io/CoreNLP/download.html
 
@@ -24,8 +24,32 @@ NLTK: https://pypi.org/project/nltk/
 ```
 pip install nltk
 ```
-		  
-Command to run Stanford NER server:
-  
-    java -mx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer -preload tokenize,ssplit,pos,lemma,ner,parse,depparse -status_port 9000 -port 9000 -timeout 15000 &
-	
+
+# Before Running the Script
+Follow these directions to set up the Stanford NER Server in a terminal window:
+- cd into the unzipped Stanford CoreNLP project directory and run the following command:
+ ```
+ java -mx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer -preload tokenize,ssplit,pos,lemma,ner,parse,depparse -status_port 9000 -port 9000 -timeout 150000
+```
+- the server will be ready once this is shown in the terminal
+```
+[main] INFO CoreNLP - StanfordCoreNLPServer listening at /0:0:0:0:0:0:0:0:9000
+```
+- open a new terminal to run the main script, html_scrape.py
+
+# Running the Script
+-add your airbnb listings in listings.txt separated by a comma (an example is found in listings.txt)
+- cd into the this project directory and run the following command:
+```
+#example of absolute-path-to-chrome-driver: /Users/bob/Downloads/chromedriver
+python html_scrape.py -C <absolute-path-to-chrome-driver> -L http://localhost:9000
+```
+## Options When Running the Script
+-use -h flag for help:
+```
+python html_scrape.py -h
+```
+- running script in non-headless mode (can see actual chrome window):
+```
+python html_scrape.py -C <absolute-path-to-chrome-driver> -L http://localhost:9000 -H 1
+```
