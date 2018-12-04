@@ -15,7 +15,7 @@ text_file.close()
 manhattan_neighborhoods = {"midtown", "harlem", "chelsea", "noho", "soho", "nolita", "tribeca", "greenwich"}
 queens_neighborhoods = {"astoria", "sunnyside", "flushing", "bellerose", "pomonok", "corona", "glendale", "bellaire", "hollis", "roxbury", "rockaway"}
 bronx_neighborhoods = {"belmont", "fordham", "woodlawn", "longwood", "tremont", "melrose", "allerton", "eastchester", "schuylerville"}
-brooklyn_neighborhoods = {"bedford", "flatbush", "kensington", "coney", "bushwick", "greenpoint", "williamsburg"}
+brooklyn_neighborhoods = {"bedford", "Bedford-Stuyvesant", "flatbush", "kensington", "coney", "bushwick", "greenpoint", "williamsburg"}
 staten_island_neighborhoods = {"arlington", "bloomfield", "concord", "livingston", "richmondtown", "stapleton", "willowbrook", "westerleigh"}
 
 def find_borough(list_of_locations):
@@ -41,6 +41,26 @@ def find_borough(list_of_locations):
     #return the borough that is most referenced
     return max(borough_dict, key=borough_dict.get)
 
+def get_crime_data(name_of_borough):
+    #connect to NYC Crime Database
+    client = Socrata("data.cityofnewyork.us", None)
+    #get past days
+    last_date = (datetime.datetime.now() + datetime.timedelta(days=-160)).isoformat()
+
+    if(name_of_borough == 'staten'):
+        upper_borough = 'STATEN ISLAND'
+    else:
+        upper_borough = name_of_borough.upper()
+
+    #build query to get crimes that are within x days and happened in name_of_borough 
+    q = "SELECT * WHERE cmplnt_fr_dt > '%s' and boro_nm = '%s'" % (last_date, upper_borough)
+
+    #run query
+    num_crimes = len(client.get("7x9x-zpz6", query=q))
+    client.close()
+    return num_crimes
+
+
 
 #url = 'https://www.airbnb.com/rooms/14389040?location=New%20York%2C%20NY%2C%20United%20States&s=8y-928Tu'
 #url2 = 'https://www.airbnb.com/rooms/891117?adults=0&children=0&infants=0&toddlers=0&s=aEURFR7F'
@@ -53,6 +73,9 @@ ner_tagger = CoreNLPParser(url='http://localhost:9000', tagtype='ner')
 options = webdriver.ChromeOptions()
 #options.add_argument('headless')
 driver = webdriver.Chrome("/Users/henrywu/Downloads/chromedriver", options=options)
+
+#dictionary to keep track of listing and crime
+links_to_crime = {key: 0 for key in urls}
 
 for url in urls:
     driver.get(url)
@@ -83,12 +106,15 @@ for url in urls:
     print('\n\n\n')
     print(the_list)
     print('\n')
-    print(find_borough(the_list))
+    borough = find_borough(the_list)
+    print(borough)
 
+    crime_in_neighborhood = get_crime_data(borough)
     
+    links_to_crime[url] = crime_in_neighborhood
+
+print(sorted(links_to_crime.items(), key=lambda x: x[1]))
 driver.quit()
-
-
 
 
 
