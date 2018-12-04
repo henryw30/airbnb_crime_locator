@@ -1,5 +1,6 @@
 # airbnb_crime_locator
-Given a list of NYC airbnb listings, this script finds recent crimes that have occurred in the area 
+Given a list of NYC airbnb listings, this script finds recent crimes that have occurred in the area. Connects to NYC's Crime Database: 
+- https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Current-Year-To-Date-/5uac-w243
 
 
 # Installation
