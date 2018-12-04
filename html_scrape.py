@@ -12,8 +12,34 @@ print(urls)
 text_file.close()
 
 
-manhattan_neighborhoods = {"midtown", "harlem",}
+manhattan_neighborhoods = {"midtown", "harlem", "chelsea", "noho", "soho", "nolita", "tribeca", "greenwich"}
+queens_neighborhoods = {"astoria", "sunnyside", "flushing", "bellerose", "pomonok", "corona", "glendale", "bellaire", "hollis", "roxbury", "rockaway"}
+bronx_neighborhoods = {"belmont", "fordham", "woodlawn", "longwood", "tremont", "melrose", "allerton", "eastchester", "schuylerville"}
+brooklyn_neighborhoods = {"bedford", "flatbush", "kensington", "coney", "bushwick", "greenpoint", "williamsburg"}
+staten_island_neighborhoods = {"arlington", "bloomfield", "concord", "livingston", "richmondtown", "stapleton", "willowbrook", "westerleigh"}
 
+def find_borough(list_of_locations):
+    borough_dict = {"manhattan": 0, "queens":0, "bronx":0, "brooklyn":0, "staten":0}
+
+    #go through all locations and add to count
+    for loc in list_of_locations:
+        if(loc.lower() in manhattan_neighborhoods or loc.lower() == "manhattan"):
+            #since manhattan is very common in any airbnb listing near nyc
+            if(loc.lower() == "manhattan"):
+                borough_dict["manhattan"] += .5
+            else:
+                borough_dict["manhattan"] += 1
+        if(loc.lower() in queens_neighborhoods or loc.lower() == "queens"):
+            borough_dict["queens"] += 1
+        if(loc.lower() in bronx_neighborhoods or loc.lower() == "bronx"):
+            borough_dict["bronx"] += 1
+        if(loc.lower() in brooklyn_neighborhoods or loc.lower() == "brooklyn"):
+            borough_dict["brooklyn"] += 1
+        if(loc.lower() in staten_island_neighborhoods or loc.lower() == "staten"):
+            borough_dict["staten"] += 1
+
+    #return the borough that is most referenced
+    return max(borough_dict, key=borough_dict.get)
 
 
 #url = 'https://www.airbnb.com/rooms/14389040?location=New%20York%2C%20NY%2C%20United%20States&s=8y-928Tu'
@@ -51,9 +77,19 @@ for url in urls:
         all_text = all_text + " " + paragraph.text
         #print(paragraph.text)
 
+
     #the_list = [x for x in ner_tagger.tag(all_text.split())]
     the_list = [x[0] for x in ner_tagger.tag(all_text.split()) if x[1] == 'LOCATION' or x[1] == 'CITY']
-    print('\n\n\n\n\n\n')
+    print('\n\n\n')
     print(the_list)
+    print('\n')
+    print(find_borough(the_list))
+
     
 driver.quit()
+
+
+
+
+
+
