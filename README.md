@@ -3,7 +3,9 @@ Given NYC airbnb listings, finds recent crimes that have occurred in the area
 
 make sure to download these repositories first:
 
-  -pip install sodapy
+-java 8
+
+-pip install sodapy
   
 -pip install selenium
   
