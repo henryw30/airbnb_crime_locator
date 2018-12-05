@@ -63,5 +63,5 @@ python html_scrape.py -h
 ```
 python html_scrape.py -C <absolute-path-to-chrome-driver> -L http://localhost:9000 -H 1
 ```
-# Close the Server
+# Closing the Server
 - close the server with ctrl+c in the terminal with server info
