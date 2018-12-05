@@ -9,7 +9,7 @@ Link to NYC's Crime Database
 
 
 # Installation
-Make sure to download these repositories first:
+Clone this repository and make sure to download these repositories first:
 
 Stanford CoreNLP (unzip and know the absolute path to this directory): https://stanfordnlp.github.io/CoreNLP/download.html
 
