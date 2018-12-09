@@ -48,18 +48,24 @@ def get_crime_data(name_of_borough):
     #connect to NYC Crime Database
     client = Socrata("data.cityofnewyork.us", None)
     #get past days
-    last_date = (datetime.datetime.now() + datetime.timedelta(days=-160)).isoformat()
+    last_date = (datetime.datetime.now() + datetime.timedelta(days=-250)).isoformat()
 
     if(name_of_borough == 'staten'):
         upper_borough = 'STATEN ISLAND'
     else:
         upper_borough = name_of_borough.upper()
 
-    #build query to get crimes that are within x days and happened in name_of_borough 
-    q = "SELECT * WHERE cmplnt_fr_dt > '%s' and boro_nm = '%s'" % (last_date, upper_borough)
+    #get all crimes without being throttled
+    num_crimes = 0
+    for i in range(15):
+        offset = 1000 * i
+        #build query to get crimes that are within x days and happened in name_of_borough 
+        q = "SELECT * WHERE cmplnt_fr_dt > '%s' and boro_nm = '%s' and law_cat_cd = '%s' OFFSET %d" % (last_date, upper_borough, "FELONY", offset)
 
-    #run query
-    num_crimes = len(client.get("7x9x-zpz6", query=q))
+        #run query
+        num_crimes += len(client.get("7x9x-zpz6", query=q))
+        
+    print(num_crimes)
     client.close()
     return num_crimes
 
