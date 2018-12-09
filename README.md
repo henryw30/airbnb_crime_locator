@@ -1,7 +1,7 @@
 # airbnb_crime_locator
-Given a list of Airbnb listings in NYC, this script finds recent crimes that have occurred in the area by figuring out which borough the listing is in and connects to NYC's Crime Database to find crime data.
+Given a list of Airbnb listings in NYC, this script finds recent felonies that have occurred in the area by figuring out which borough the listing is in and connects to NYC's Crime Database to find crime data.
 
-This python script uses Selenium and the Chrome web driver to connect to Airbnb.com since Airbnb does not provide an API. It then scrapes the text from the listings and uses Stanford's Named Entity Recognizer to identify which borough the Airbnb listing is located in. The script then connects to NYC's Crime Database to find the number of crimes that have recently occurred in the area and ranks the Airbnb listings from the least number of crimes to most.
+This python script uses Selenium and the Chrome web driver to connect to Airbnb.com since Airbnb does not provide an API. It then scrapes the text from the listings and uses Stanford's Named Entity Recognizer to identify which borough the Airbnb listing is located in. The script then connects to NYC's Crime Database to find the number of felonies that have recently occurred in the area and ranks the Airbnb listings from the least number of felonies to most.
 
 
 Link to NYC's Crime Database
