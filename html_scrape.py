@@ -55,7 +55,7 @@ def get_crime_data(name_of_borough):
     else:
         upper_borough = name_of_borough.upper()
 
-    #get all crimes without being throttled
+    #get all felonies without being throttled
     num_crimes = 0
     for i in range(15):
         offset = 1000 * i
