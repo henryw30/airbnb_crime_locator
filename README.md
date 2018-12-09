@@ -7,6 +7,12 @@ This python script uses Selenium and the Chrome web driver to connect to Airbnb.
 Link to NYC's Crime Database
 - https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Current-Year-To-Date-/5uac-w243
 
+Overview of functions (script will handle all function calls):
+- read_url_listings: reads url listings from listings.txt
+- write_listings_ordered: writes ordered listings to ordered.txt
+- find_borough: identifies borough of listing
+- get_crime_data: connects to NYC's Crime Database and finds number of felonies in borough
+
 
 # Installation
 Clone this repository and make sure to download these repositories first:
